@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>duckcraft 2d view of entity movement</title>
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        canvas { background-color: #202020; }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// Canvas settings
+const squareSize = 40;
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+
+// Offsets for 8 surrounding positions
+const offsets = [
+    [-60, -60], [0, -60], [60, -60],
+    [-60, 0],           [60, 0],
+    [-60, 60],  [0, 60],  [60, 60]
+];
+
+// Current position of yellow square
+let currentPos = { x: centerX, y: centerY };
+
+// Draw the scene
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw surrounding gray squares
+    ctx.fillStyle = '#888888';
+    offsets.forEach(offset => {
+        ctx.fillRect(centerX + offset[0] - squareSize/2, centerY + offset[1] - squareSize/2, squareSize, squareSize);
+    });
+    
+    // Draw central yellow square
+    ctx.fillStyle = '#FFFF00';
+    ctx.fillRect(currentPos.x - squareSize/2, currentPos.y - squareSize/2, squareSize, squareSize);
+}
+
+// Move the yellow square randomly to one surrounding block
+function moveRandomly() {
+    const randIndex = Math.floor(Math.random() * offsets.length);
+    currentPos.x = centerX + offsets[randIndex][0];
+    currentPos.y = centerY + offsets[randIndex][1];
+}
+
+// Initial draw
+draw();
+
+// Animate with movement every second
+setInterval(() => {
+    moveRandomly();
+    draw();
+}, 1000);
+</script>
+</body>
+</html>
